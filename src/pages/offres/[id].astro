@@ -1,0 +1,41 @@
+---
+import { getOffre } from "@src/backend.js";
+const { id } = Astro.params;
+export const prerender = false;
+const offre = await getOffre(id);
+
+console.log(offre);
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+
+        <title>Offres</title>
+    </head>
+    <body>
+        <a href="/offres" class="text-blue-500 hover:underline">Back to offers</a>
+        <div
+            class="bg-slate-100 rounded-lg shadow-lg p-4 hover:bg-slate-200 flex flex-col items-center relative"
+        >
+            <p class="font-semibold text-center">
+                {offre.nomMaison}
+            </p>
+            <img
+                src={`${offre.imageUrl}`}
+                alt="Image maison"
+                class="w-1/2 h-1/4 mx-auto"
+            />
+            <ul>
+                <li>Nombre de chambres: {offre.nbChambres}</li>
+                <li>Nombre de salles de bain: {offre.Sdb}</li>
+                <li>Surface: {offre.surface} m²</li>
+                <li>Adresse: {offre.adresse}</li>
+                <li>Prix: {offre.prix} €</li>
+            </ul>
+        </div>
+    </body>
+</html>

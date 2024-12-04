@@ -1,0 +1,13 @@
+---
+const {tab} = Astro.props; 
+console.log(tab === 'acceuil');
+
+---
+
+<header>
+  <nav class="space-x-4 p-4 bg-gray-800 text-white"  x-data={` {tab: '${tab}'} `}>
+      <a href="/" class="hover:text-red-400" x-bind:class= "{'font-bold' : tab === 'acceuil' }">Acceuil</a>
+      <a href="/offres" class="hover:text-red-400"  x-bind:class= "{'font-bold' : tab === 'offres' }">Offres</a>
+      <a href="/contact" class="hover:text-red-400">Contact</a>
+  </nav>
+</header>

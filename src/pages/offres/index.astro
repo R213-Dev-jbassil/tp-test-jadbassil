@@ -1,0 +1,92 @@
+---
+//@ts-nocheck
+import { getOffres, filterBySurface } from "@src/backend.js";
+import Card from "@components/Card.astro";
+import Carousel from "@components/Carousel.astro";
+import Base from "@src/layouts/Base.astro";
+
+console.log(
+	"Hi! I’m the server. This is logged in the terminal where Astro is running.",
+);
+
+export const prerender = false;
+
+let Offres = [];
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+	const minSurface = parseInt(data.get("minSurface"));
+    // Do something with the data
+	Offres = await filterBySurface(minSurface);
+	console.log('surface', minSurface, data);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+} else {
+	Offres = await getOffres();
+}
+
+---
+
+<Base title="Offres" tab="offres">
+		<h1 class="text-lg text-center mt-4">Offres</h1>
+		<div x-data="{struct: 'grid'}" class="flex flex-col items-center justify-center mt-4">
+			<ul class="flex space-x-4">
+				<li>
+					<button
+						class="px-4 py-2 bg-blue-500 text-white rounded"
+						@click="struct = 'grid'; console.log(struct);"
+					>
+						Grid View
+					</button>
+				</li>
+				<li>
+					<button
+						class="px-4 py-2 bg-blue-500 text-white rounded"
+						@click="struct = 'carousel'; console.log(struct);"
+					>
+						Carousel View
+					</button>
+				</li>
+			</ul>
+			<div class="m-4 flex">
+				<form method="POST" class="flex">
+					<label
+						for="surfaceFilter"
+						class="block text-sm font-medium text-gray-700"
+						>Filtrer par surface (m²):</label
+					>
+					<input
+						type="number"
+						id="surfaceFilter"
+						name="minSurface"
+						value="0"
+						class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+					/>
+					<button
+						id="filter-button"
+						class="bg-blue-500 hover:bg-slate-400 text-black rounded-md gap-6 shadow-md p-2 ml-4"
+						>Filter</button
+					>
+				</form>
+			</div>
+			<div x-show="struct === 'grid'" class="w-full mt-6">
+				<div
+					id="grid"
+					class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-3"
+				>
+					{Offres.map((offre) => <Card offre={offre} />)}
+				</div>
+			</div>
+
+			<div x-show="struct === 'carousel'" class="w-full mt-6">
+				<Carousel offres={Offres} />
+			</div>
+		</div>
+	</body>
+	<script>
+	</script>
+</Base>

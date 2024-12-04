@@ -1,0 +1,48 @@
+---
+import Card from "@components/Card.astro";
+
+export const prerender = false;
+
+const { offres } = Astro.props;
+---
+
+<!-- Pass the array using JSON.stringify to ensure proper formatting -->
+<div
+    x-data={`{ currentIndex: 0, offres: ${JSON.stringify(offres)}, get currentOffer()  { return this.offres[this.currentIndex]; }}`}
+    x-init="console.log(offres)"
+    class="relative"
+>
+    <!-- Display the current item from the array -->
+    <!-- Navigation buttons -->
+    <button
+        @click="currentIndex = (currentIndex === 0) ? offres.length - 1 : currentIndex - 1"
+        class="  bg-gray-800 text-white p-2"
+        >Prev</button
+    >
+    <button
+        @click="currentIndex = (currentIndex === offres.length - 1) ? 0 : currentIndex + 1"
+        class="  bg-gray-800 text-white p-2"
+        >Next</button
+    >
+    <div
+        class="center"
+    >   
+        <div
+            class="bg-slate-100 rounded-lg shadow-lg p-8 hover:bg-slate-200 flex flex-col items-center relative"
+        >
+            <p class="font-semibold text-center text-xl">
+                <span x-text="currentOffer.nomMaison" class="center"></span>
+            </p>
+            <img
+                :src="currentOffer.imageUrl"
+                alt="Image maison"
+                class="w-60 h-40  "
+            />
+            <a
+                :href="`/offres/${currentOffer.id}`"
+                class="absolute bottom-0 right-0 p-4 bg-gray-800 text-white rounded-bl-lg"
+                >Voir plus</a
+            >
+        </div>
+    </div>
+</div>

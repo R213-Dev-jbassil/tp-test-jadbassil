@@ -1,0 +1,35 @@
+---
+const { offre } = Astro.props;
+console.log('test', offre);
+
+---
+
+<!-- <div
+    class="bg-slate-100 rounded-lg shadow-lg p-4 hover:bg-slate-200 flex flex-col items-center relative"
+>
+    <p class="font-semibold text-center">
+        {offre.nomMaison}
+    </p>
+    <img src={`${offre.imageUrl}`} alt="Image maison" class="w-60 h-40 mx-auto" />
+    <a href={`/offres/${offre.id}`} class="absolute bottom-0 right-0 p-2 bg-gray-800 text-white rounded-bl-lg">Voir plus</a>
+</div> -->
+<div
+    class="bg-slate-100 rounded-lg shadow-lg p-4 hover:bg-slate-200 flex flex-col items-center relative"
+    x-data={`{favori: ${offre.favori}, setFavori() {this.favori = !this.favori; setFavori(${JSON.stringify(offre)});}}`}
+>
+    <p class="font-semibold text-center">
+        {offre.nomMaison}
+    </p>
+    <img src={`${offre.imageUrl}`} alt="Image maison" class="w-60 h-40 mx-auto" />
+    <a href={`/offres/${offre.id}`} class="absolute bottom-0 right-0 p-2 bg-gray-800 text-white rounded-bl-lg">Voir plus</a>
+    <button class="absolute bottom-0 left-0 p-2 text-white rounded-br-lg" @click="setFavori()">
+        <img :src="favori? 'star.png': 'favorite.png'" alt="Favorite Icon" class="w-6 h-6" />
+    </button>
+</div>
+
+<script>
+    //@ts-nocheck
+    import { setFavori } from "@src/backend";
+    window.setFavori = setFavori;
+
+</script>
